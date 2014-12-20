@@ -1,0 +1,53 @@
+cplot residuals:
+*hint: use predict() function to seamlessly apply the linear model to the practice variables... OR can apply my own variables... just need to identify them... i.e. predict(model6, list(Murder=10.5, HS.Grad=48, Frost=100))
+
+*use the resid() to extract the residuals from a linear model
+- later can be plotted as plot(x,resid(lm(y~x))); abline(h=0)... the y-axis is the size of the residuals from the model... keep the abline(h=0) - don't adjust it
+
+check for heteroskedasticity (variance of the error terms depends on x)
+
+to pull the standard deviation of the residuals, use "summary(fit)$sigma"... this is the equivalent of sqrt(sum(resid(fit)^2)/(n-2)) 
+
+Standardize coefficients by converting regressors to x-variables... with the 'scale()' this 
+
+-plot a regression: abline(lm(y~x))... or lines(x-term,fit$fitted), which plots the linear model already fitted to the x-terms passed in the argument list
+
+- the variance of residuals is simply 1/(n-2)*sum(e^2)... so we do not take the square of the difference from the mean of each residual
+
+To get the s.e. of the coefficients, apply the variance function to the coefficient formulas
+- variance of B1 = sum(e^2)/(n-2)/sum(x(i) - mean(x))^2
+- variance of B0 = (1/n + mean(x)^2/sum(x(i)-mean(x))^2)*variance(Y)
+___________________________________
+C.I. around prediction lines
+
+1) Condifence Intervals for the regression at a point... i.e. line at X(0) s.e.
+s.d.(residuals)*sqrt(1/n+((X(0)-mean(X))^2/sum((X(i)-mean(X))^2)))
+- note: s.d.(residuals) = $sigma from the "lm" model
+
+2) C.I. around the prediction of what Y would be at a point... i.e. prediction interval s.e. at X(0)
+- the formula the same as #1 except 1 is added within the 'sqrt()'
+_____________________________________
+Multi-variable:
+In order to determine (adjust) the (real) relationship between a variable and the response variable, we must regress from the response all the other confounding variables...
+A practical manner to do this, which reveals the errors with unadjusted regressions with confounders is to plot a single unadjusted variable to the response in one graph, and plot the residuals of a confounding variable to the reponse (y-axis) to the residuals of the original variable regressed to the confounding variable
+ex: y axis = resid(lm(y~x2)) ... x axis = resid(lm(x1~x2))
+
+variation of the residuals is the adjusted mean (n-p) of the squared residuals... the S.E. is the square root of this term
+
+Prove that in order to estimate a coefficient for x1, I am to fit a slope through the origin and the response, to get the  then through the x1 and x2, then through each of the 
+
+What is it about regressing the error terms from one pair of variables from another, ie the wrapper e() from 2_1_d?
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Multi-variable interactions:
+1) http://faculty.smu.edu/kyler/courses/7312/interact.pdf
+2) http://www.scilogs.com/mola_mola/interactions-and-main-effects-in-simple-linear-models/
+3) http://quantpsy.org/interact/interactions.htm
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Areas of weakness:
+1) (done) regression through the mean OR adjustment of independent variables to get an interpretable intercept term
+2) Extracting the relationship between a confounding variable from a variable and a response... often shown on the slides is a plot of the residuals of resid(lm(y~x2)) - y-axis and resid(lm(x1-x2))... in a sense, this plots the TSS when fitting linear regressions, which in part reveals the variance left over from the model... this plot would then show the correlation between the two residuals
+3) calculating s.e. of coefficients and predicted variables
+4) exactly how multiple regression coefficients are calculated
+5) appropriateness of ANOVA
