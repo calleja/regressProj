@@ -1,0 +1,51 @@
+http://ww2.coastal.edu/kingw/statistics/R-tutorials/multregr.html
+http://scc.stat.ucla.edu/page_attachments/0000/0139/reg_1.pdf
+http://scc.stat.ucla.edu/page_attachments/0000/0140/reg_2.pdf
+http://www.statmethods.net/stats/regression.html
+https://www.zoology.ubc.ca/~schluter/R/fit-model/
+http://scc.stat.ucla.edu/page_attachments/0000/0199/Regression.pdf
+http://www.stat.ucla.edu/~hqxu/stat105/pdf/ch12.pdf
+http://cran.r-project.org/other-docs.html
+
+further...
+http://cran.r-project.org/doc/contrib/Faraway-PRA.pdf
+http://cran.r-project.org/doc/contrib/Fox-Companion/appendix.html
+http://www.stat.ucla.edu/~hqxu/stat105/pdf/ch12.pdf
+http://scc.stat.ucla.edu/page_attachments/0000/0199/Regression.pdf
+
+implement stepwise regression:
+- done manually
+- use functions: step(, direction="backward, forward, both")
+- throw all variables into a model and plot residuals, etc: plot(fit)... "fit" = model object
+
+Check the applicability of the model:
+- independence of errors... use autocorrelation plots
+- homoskedasticity (constant variance) - check on residuals vs. predicted plot
+- normality of errors: look at normal probability plot
+
+Test coefficients:
+- hypothesis testing whether each coefficient is significantly different from 0
+
+Applying ANOVA:
+requirements: data within each group is nearly normal; variability across the groups is ~ equal
+- the null hypothesis is the means across all groups are equal
+
+## project instructions  ###
+You work for Motor Trend, a magazine about the automobile industry. Looking at a data set of a collection of cars, they are interested in exploring the relationship between a set of variables and miles per gallon (MPG) (outcome). They are particularly interested in the following two questions:
+
+    “Is an automatic or manual transmission better for MPG”
+    "Quantify the MPG difference between automatic and manual transmissions"
+####        ######
+
+Marks on the project:
+1) Did you interpret the coefficients correctly?
+2) Did you do some exploratory data analysis
+3) Did you fit multiple models and detail your strategy for model selection
+4) Did you answer the questions of interest or detail why the question is not answerable
+5) DId you do a residual plot and some diagnostics
+6) Did you quantify the uncertainty in your conclusions and/or perform an inference correctly
+7) Did you communicate your findings
+
+
+Personal Considerations:
+1) Do I need to center or scale the variables? How do I do so in multiple regression?
