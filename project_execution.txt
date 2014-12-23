@@ -13,22 +13,61 @@ http://cran.r-project.org/doc/contrib/Fox-Companion/appendix.html
 http://www.stat.ucla.edu/~hqxu/stat105/pdf/ch12.pdf
 http://scc.stat.ucla.edu/page_attachments/0000/0199/Regression.pdf
 
+Residuals:
+www4.stat.ncsu.edu/stefankski
+
+Exploratory Analysis:
+- check for outliers
+- run a correlation analysis on all variables
+- ANOVA on the cylinder categories... and perhaps another variable
+- run ANOVA on the array of models I'm comparing... try: http://cran.r-project.org/doc/contrib/Faraway-PRA.pdf
+
+MANOVA:
+1) http://online.sfsu.edu/efc/classes/biol710/manova/manovanewest.htm
+2) http://cran.r-project.org/doc/contrib/Faraway-PRA.pdf
+Applying ANOVA:
+requirements: data within each group is nearly normal; variability across the groups is ~ equal
+- the null hypothesis is the means across all groups are equal
+
+Model Selection
 implement stepwise regression:
 - done manually
 - use functions: step(, direction="backward, forward, both")
 - throw all variables into a model and plot residuals, etc: plot(fit)... "fit" = model object
+- try the 'rcorr(,type='pearson)'
+from the forum: When you have fitted your model, you can evaluate if your regressors are or are not significantly associated to your outcome variable through the p-value associated to the t-test. When you put more than one regressor into your model, each estimate is adjusted for the potential confounding effect of all the other regressors into the model, independently of the degree of significance of the p-value.
+- apply ANOVA which uses a one-sided p-value associated with an F statistic
 
-Check the applicability of the model:
+
+Check the applicability of the model (errors, etc):
 - independence of errors... use autocorrelation plots
 - homoskedasticity (constant variance) - check on residuals vs. predicted plot
 - normality of errors: look at normal probability plot
 
-Test coefficients:
-- hypothesis testing whether each coefficient is significantly different from 0
+Quantify Unertainty
+1) Test coefficients:
+- hypothesis testing whether each coefficient is significantly different from 0: relies on a T-test
+2) Inference: does the data provide evidence that X(j) has a significant linear effect with Y, controlling for all the other variables
+- F test will check whether at least one of the explanatory variables is important in predicting the response
+- Intepret the R2
+- around coefficients: coefplot() - part of the 'arm' library: allows to test whether coefficients are statistically significant from 0
 
-Applying ANOVA:
-requirements: data within each group is nearly normal; variability across the groups is ~ equal
-- the null hypothesis is the means across all groups are equal
+Check all assumptiongs (diagnostics portion of the model evaluation):
+1. mean of the errors not signiﬁcantly diﬀerent from zero (One Sample t-test) 
+ 2. normality of the error distribution (Shapiro-Wilk normality test and QQ plot)
+ 3. homoscedasticity of the residuals (Studentized Breusch-Pagan test)
+ 4. absence of correlation among the residuals (Durbin-Watson test) 
+ 5. multicollinearity (vif())
+
+Some other information (regarding model assumptions and diagnostics):
+http://www.statmethods.net/stats/rdiagnostics.html
+http://courses.washington.edu/b515/l7.pdf
+http://www.ppsw.rug.nl/~boomsma/apstatdata/Regrdiag_R.pdf
+
+
+Interpret coefficients:
+1) Is it possible to interpret main effects when there is an interaction coefficient? Interpretation becomes difficult when interactions are strongly correlated with the linear/main effects (the original variables) or with each other, there still may be some lurking ambiguity in interpreting the regression coefficients. - I can test this by regressing error terms using main coefficients to error terms of interaction coefficients.
+
 
 ## project instructions  ###
 You work for Motor Trend, a magazine about the automobile industry. Looking at a data set of a collection of cars, they are interested in exploring the relationship between a set of variables and miles per gallon (MPG) (outcome). They are particularly interested in the following two questions:
@@ -38,12 +77,12 @@ You work for Motor Trend, a magazine about the automobile industry. Looking at a
 ####        ######
 
 Marks on the project:
-1) Did you interpret the coefficients correctly?
-2) Did you do some exploratory data analysis
-3) Did you fit multiple models and detail your strategy for model selection
+1) Did you interpret the coefficients correctly? x
+2) Did you do some exploratory data analysis? x
+3) Did you fit multiple models and detail your strategy for model selection? Answer: proper grouping ~x
 4) Did you answer the questions of interest or detail why the question is not answerable
 5) DId you do a residual plot and some diagnostics
-6) Did you quantify the uncertainty in your conclusions and/or perform an inference correctly
+6) Did you quantify the uncertainty in your conclusions and/or perform an inference correctly?
 7) Did you communicate your findings
 
 

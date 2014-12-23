@@ -14,6 +14,9 @@ Standardize coefficients by converting regressors to x-variables... with the 'sc
 
 - the variance of residuals is simply 1/(n-2)*sum(e^2)... so we do not take the square of the difference from the mean of each residual
 
+Testing the model fit:
+To test the improvement of incremental models apply: change in sum of squares divided by change in degrees of freedom, and that ratio divided by the residual mean square for the more elaborate model, for an F-test of the hypothesis that the additional terms did not explain any more of the variance in the dependent variable
+
 To get the s.e. of the coefficients, apply the variance function to the coefficient formulas
 - variance of B1 = sum(e^2)/(n-2)/sum(x(i) - mean(x))^2
 - variance of B0 = (1/n + mean(x)^2/sum(x(i)-mean(x))^2)*variance(Y)
@@ -29,7 +32,7 @@ s.d.(residuals)*sqrt(1/n+((X(0)-mean(X))^2/sum((X(i)-mean(X))^2)))
 _____________________________________
 Multi-variable:
 In order to determine (adjust) the (real) relationship between a variable and the response variable, we must regress from the response all the other confounding variables...
-A practical manner to do this, which reveals the errors with unadjusted regressions with confounders is to plot a single unadjusted variable to the response in one graph, and plot the residuals of a confounding variable to the reponse (y-axis) to the residuals of the original variable regressed to the confounding variable
+A practical manner to do this, which reveals the errors with unadjusted regressions with confounders is to plot a single unadjusted variable to the response in one axis, and plot the residuals of a confounding variable to the reponse (y-axis) to the residuals of the original variable regressed to the confounding variable
 ex: y axis = resid(lm(y~x2)) ... x axis = resid(lm(x1~x2))
 
 variation of the residuals is the adjusted mean (n-p) of the squared residuals... the S.E. is the square root of this term
@@ -44,6 +47,7 @@ Multi-variable interactions:
 2) http://www.scilogs.com/mola_mola/interactions-and-main-effects-in-simple-linear-models/
 3) http://quantpsy.org/interact/interactions.htm
 
+High intercorrelations between independent variables in a model fittted with many of such variables can lead to a regression solution that is unstable due to extremely low tolerances or extremely high variance inflation factors for some or all of the predictors.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Areas of weakness:
 1) (done) regression through the mean OR adjustment of independent variables to get an interpretable intercept term
