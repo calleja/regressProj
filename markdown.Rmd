@@ -1,0 +1,124 @@
+---
+title: "Regressions Project"
+author: "Luis Calleja"
+date: "12/20/2014"
+output: html_document
+---
+
+A car with an automatic transmission has, on average, a higher mpg than cars with manual transmissions when a car is light. However, as a car increases in weight, a manual transmission has a higher mpg performance than an automatic. I arrived at this conclusion by treating the automatic/manual transmission characteristic of a car as an interaction variable to predictive variables weight and quarter second mile time.
+
+The data set mtcars contains a multitude of variables on 32 cars. I believed that those with the biggest impact to a cars mileage to be number of cylinders, weight and transmission type. Number of cylinders had a low F factor when I ran an ANOVA test comparing means of mpg grouped by number of cylinder.
+
+
+```{r}
+anova(lm(mpg~as.factor(cyl),data=mtcars)) #very low
+```
+
+Running a backward stepwise regression algorithm left out cylinders in favor of quarter second time, which is likely a function of weight, cylinders, transmission and others, but not correlated strongly with any of these, so I took the recommendation and inserted it into the model.
+
+I tried fitting other models with less success as measured by counterintuitive betas and lower adjusted R2. These being:
+
+1. inter.2<-lm(mpg~am.f+wt*qsec,data=n.cars)
+  + having a positive coefficient for 'wt' variable
+2. test<-lm(mpg~wt+wt*cyl.f,data=n.cars) 
+  + having an adjusted R2=8349
+
+Lastly on cylinder, if I had chosen to implement it into the model, as a stand alone variable there were few observations across the range of mpg... mpg tended to cluster at exclusive intervals of mpg, so I did not think it would serve well as an interaction variable.
+ 
+ 
+###Intepretation of coefficients 
+Note: I adjusted the variable 'weight' and variable 'qsec' down by the size of the smallest observation:
+
+```{r}
+n.cars<-mtcars[,-c(2,9)]
+#n.cars<-within(n.cars, cyl.f<-as.factor(cyl) rm(cyl))
+n.cars$cyl.f<-as.factor(mtcars$cyl)
+n.cars$am.f<-as.factor(mtcars$am)
+n.cars$adj.wt<-n.cars$wt-min(n.cars$wt)
+n.cars$adj.qsec<-n.cars$qsec-min(n.cars$qsec)
+```
+
+```{r, echo=FALSE}
+inter.1<-lm(mpg~adj.wt+adj.qsec+adj.wt*am.f,data=n.cars)#adj R2=.88
+summary(inter.1)
+```
+Regression: 20.026 - 2.937*wt +1.017*qsec + 7.814(am=1)
+- 4.14*wt(am=1)
+
+intercept=20.026: mpg at wt of 1.513 - the lowest wt of the obs
+& the lowest qsec time (14.5) with a manual transmission 
+
+B1=-2.937: the change in mpg for a 1 unit change in wt
+in the case of a manual transmission
+
+B2=1.017 is the change in mpg for a 1 sec increase in
+1/4 mile time, holding wt and transmission type 
+constant
+
+B3=7.814: the change in the intercept should a car be
+automatic... i.e.the difference in mean mpg across
+all other variables when a car is automatic
+
+B4=-4.14 is the change in the coefficient to wt
+for a change in transmission to automatic from manual
+
+You can also embed plots, for example:
+
+###Inference & Diagnostics
+One-sided t-tests of all coefficients against their standard error yield a p-value less than .01, which states they are statisitically significant from 0.
+
+R2 of the model is .8804, the proportion of the variance of the model to the total variance of the response variable (mpg).
+
+### Quantify Uncertainty
+Variance of residuals do appear to fan out as mpg increases. Additionally, the Normal Q-Q plot is lacking uniformity; however a less than ideal plot is to be expected with a small sample size as mtcars. See the appendix for graphics.
+
+### Appendix
+The below code shows how number of cylinders tends to cluster around different levels of mpg, however, regressing for weight provides little information
+```{r, echo=FALSE}
+mtcars.o<-mtcars[order(mtcars$cyl),]
+#convert cylinder to factor
+mtcars.o$cyl.f<-as.factor(mtcars.o$cyl)
+
+plot(mtcars$mpg~mtcars$wt, type="n",frame=FALSE)
+#not considering the groups
+abline(lm(mpg~wt,data=n.cars),lwd=2)
+#considering the groups:
+#first fit the model with groups:
+fit<-lm(mpg~wt+cyl.f,data=n.cars)
+#only the intercept will change
+abline(coef(fit)[1],coef(fit)[2],col="blue")#4cyl
+abline(coef(fit)[1]+coef(fit)[3],coef(fit)[2],lwd=2,col="salmon")
+abline(coef(fit)[1]+coef(fit)[4],coef(fit)[2],col="orange",lwd=3) #8cyl
+
+#fill in different colored points
+points(mtcars.o[levels(mtcars.o$cyl.f)==4,6],
+mtcars.o[levels(mtcars.o$cyl.f)==4,1],pch=21,bg="blue") 
+
+points(mtcars.o[levels(mtcars.o$cyl.f)==6,6],
+mtcars.o[levels(mtcars.o$cyl.f)==6,1],pch=21,bg="salmon")
+
+points(mtcars.o[levels(mtcars.o$cyl.f)==8,6],
+mtcars.o[levels(mtcars.o$cyl.f)==8,1],pch=21,bg="orange")
+```
+
+The above reveals that grouping effect is ver hard to discern among cylinders. The above shows how automatic transmission (in salmon) tends to be higher in terms of mpg per weight. The coefficient to weight may also be influenced by transmission type...
+
+```{r, echo=FALSE}
+plot(n.cars$mpg~n.cars$wt, type="n",frame=FALSE)
+#not considering the groups
+abline(lm(mpg~wt,data=n.cars),lwd=2)
+fit<-lm(mpg~wt+am.f,data=n.cars)
+
+points(n.cars[levels(n.cars$am.f)=='0',5],
+n.cars[levels(n.cars$am.f)=='0',1],pch=21,bg="blue") 
+
+points(n.cars[levels(n.cars$am.f)=='1',5],
+n.cars[levels(n.cars$am.f)=='1',1],pch=21,bg="salmon")
+```
+
+Residuals versus fitted values of mpg:
+```{r, echo=FALSE}
+par(mfrow=c(1,1))
+plot(predict(inter.1),resid(inter.1))
+abline(h=0)
+```
